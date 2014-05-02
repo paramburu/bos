@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Basic Oxygen Steelmaking Simulation</title>
+    <link rel="stylesheet" href="styles/main.min.c0168836.css"/>
+    <script src="//use.edgefonts.net/play.js"></script>
+    <script src="scripts/vendor/init.min.c7e49a75.js"></script>
+    <script>
+        var scorm = pipwerks.SCORM;
+        //Specify SCORM 2004:
+        scorm.version = "2004";
+        var lmsConnected = scorm.init();
+        var studentLanguage;
+
+        if(lmsConnected){
+            studentLanguage = scorm.get('cmi.learner_preference.language');
+            scorm.save();        // Commit to LMS
+        }
+
+        if(!studentLanguage){
+            studentLanguage = "en-GB";
+        }
+
+        //For testing
+        //studentLanguage = "zh-CHS";
+
+        var lang;
+        for(i=0;i<langs.length;i++){
+            if(langs[i]["language"]==studentLanguage){
+                lang = langs[i];
+                break;
+            }
+        }
+    </script>
+</head>
+<body>
+    <img src="images/melting_path_bg.736f85e9.png" class="hide" id="melting_path_bg">
+    <header id="sim_header">
+        <div class="row">
+            <div class="logo">
+                <img src="images/logo.3e3aa085.svg" alt="Steel University">
+            </div>
+        </div>
+        <div class="separator">
+            <div class="color redbg"></div>
+            <div class="color greenbg"></div>
+            <div class="color orangebg"></div>
+            <div class="color yellowbg"></div>
+            <div class="color bluebg"></div>
+            <div class="color redbg"></div>
+        </div>
+    </header>
+    <div id="sim_body">
+        <section id="intro" class="view background">
+            <h1><script>pt('basic_oxygen_steelmaking')</script></h1>
+            <div class="description panel callout">
+                <script>pt('introduction_body')</script>
+            </div>
+            <div class="intro-buttons">
+                <a href="#" class="button expand upper" data-goto-id="options"><script>pt('intro_start')</script> <span class="fa fa-chevron-circle-right"></span></a>
+            </div>
+        </section>
+        <section id="options" class="view">
+            <h3><script>pt('simulation_settings');</script></h3>
+
+            <form action="#" method="POST">
+                <dl class="accordion" data-accordion="">
+                    <dd class="step1 active">
+                        <a href="#step1"><span class="bullet"></span> <span class="right">Step 1</span> <strong><script>pt('user_level')</script></strong></a>
+                        <div id="step1" class="content active">
+                            <div>
+                                <label for="student_radio"><input type="radio" id="student_radio" name="userLevel" value="student" checked="checked"> <script>pt('university_student')</script></label>
+                            </div>
+                            <div>
+                                <label for="worker_radio"><input type="radio" id="worker_radio" name="userLevel" value="worker"> <script>pt('steel_worker')</script></label>
+                            </div>
+                            <div class="panel small description">
+                                <script>pt('student_user_details')</script>
+                            </div>
+                        </div>
+                    </dd>
+                    <dd class="step2">
+                        <a href="#step2"><span class="bullet"></span> <span class="right">Step 2</span> <strong><script>pt('steel_grade')</script></strong></a>
+                        <div id="step2" class="content">
+                            <div>
+                                <label for="beam_grade"><input type="radio" id="beam_grade" name="steelGrade" value="beam" checked="checked"> <script>pt('construction_steel_long')</script></label>
+                            </div>
+                            <div>
+                                <label for="car_grade"><input type="radio" id="car_grade" name="steelGrade" value="car"> <script>pt('car_steel_long')</script></label>
+                            </div>
+                            <div>
+                                <label for="pipe_grade"><input type="radio" id="pipe_grade" name="steelGrade" value="pipe"> <script>pt('pipe_steel_long')</script></label>
+                            </div>
+                            <div>
+                                <label for="gear_grade"><input type="radio" id="gear_grade" name="steelGrade" value="gear"> <script>pt('engineering_steel_long')</script></label>
+                            </div>
+                            <div class="panel small description">
+                                <script>pt('construction_steel_description'); pt('novice_users')</script>
+                            </div>
+                        </div>
+                    </dd>
+                    <dd class="step3">
+                        <a href="#step3"><span class="bullet"></span> <span class="right">Step 3</span> <strong><script>pt('materials')</script></strong></a>
+                        <div id="step3" class="content">
+                            <div class="row">
+                                <div class="medium-8 columns raw-materials">
+                                    <table width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th><script>pt('raw_material')</script></th>
+                                                <th><script>pt('unit_cost')</script></th>
+                                                <th><script>pt('mass')</script></th>
+                                                <th><script>pt('cost')</script></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><script>pt('hot_metal')</script></td>
+                                                <td>$185.00/t</td>
+                                                <td>
+                                                    <input type="number" min="200" max="300" value="200" class="spinner" id="materials_hot_metal_mass">
+                                                </td>
+                                                <td class="materials_hot_metal_cost">$ 37000</td>
+                                            </tr>
+                                            <tr>
+                                                <td><script>pt('light_scrap')</script></td>
+                                                <td>$0.19/kg</td>
+                                                <td>
+                                                    <input type="number" min="0" max="20000" step="50" value="0" class="spinner" id="materials_light_scrap_mass">
+                                                </td>
+                                                <td class="materials_light_scrap_cost">$ 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td><script>pt('heavy_scrap')</script></td>
+                                                <td>$0.15/kg</td>
+                                                <td>
+                                                    <input type="number" min="0" max="20000" step="50" value="0" class="spinner" id="materials_heavy_scrap_mass">
+                                                </td>
+                                                <td class="materials_heavy_scrap_cost">$ 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td><script>pt('iron_ore')</script></td>
+                                                <td>$0.09/kg</td>
+                                                <td>
+                                                    <input type="number" min="0" max="20000" step="50" value="0" class="spinner" id="materials_iron_mass">
+                                                </td>
+                                                <td class="materials_iron_cost">$ 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td><script>pt('lime')</script></td>
+                                                <td>$0.09/kg</td>
+                                                <td>
+                                                    <input type="number" min="0" max="20000" step="50" value="0" class="spinner" id="materials_lime_mass">
+                                                </td>
+                                                <td class="materials_lime_cost">$ 0</td>
+                                            </tr>
+                                            <tr>
+                                                <td><script>pt('dolomite')</script></td>
+                                                <td>$0.09/kg</td>
+                                                <td>
+                                                    <input type="number" min="0" max="20000" step="50" value="0" class="spinner" id="materials_dolomite_mass">
+                                                </td>
+                                                <td class="materials_dolomite_cost">$ 0</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2"><strong><script>pt('total')</script></strong></td>
+                                                <td class="materials_total_mass">200 t</td>
+                                                <td class="materials_total_cost">$ 37000</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"><strong><script>pt('cost_per_tonne')</script></strong></td>
+                                                <td class="materials_cost_per_tonne">$ 185/t</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                    <a class="clearform button tiny radius right"><span class="fa fa-eraser fa-lg"></span> <script>pt('clear')</script></a>
+                                </div>
+                                <div class="medium-4 columns">
+                                    <div>
+                                        <label for="target_steel_grade"><strong><script>pt('target_steel_grade')</script></strong></label>
+                                        <select name="targetSteelGrade" id="target_steel_grade">
+                                            <option value="beam"><script>pt('construction_steel')</script></option>
+                                            <option value="car"><script>pt('car_steel')</script></option>
+                                            <option value="pipe"><script>pt('pipe_steel')</script></option>
+                                            <option value="gear"><script>pt('engineering_steel')</script></option>
+                                        </select>
+                                    </div>
+                                    <table width="100%" class="composition-table hide-for-small-only">
+                                        <thead>
+                                            <tr>
+                                                <th><script>pt('element')</script></th>
+                                                <th width="200"><script>pt('result')</script></th>
+                                                <th class="show-for-large-up"><script>pt('min')</script></th>
+                                                <th class="show-for-large-up"><script>pt('max')</script></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>C*</td>
+                                                <td class="composition_c_result">4.500</td>
+                                                <td class="composition_c_min show-for-large-up">0.1</td>
+                                                <td class="composition_c_max show-for-large-up">0.16</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Si*</td>
+                                                <td class="composition_si_result">0.400</td>
+                                                <td class="composition_si_min show-for-large-up">0</td>
+                                                <td class="composition_si_max show-for-large-up">0.25</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mn*</td>
+                                                <td class="composition_mn_result">0.500</td>
+                                                <td class="composition_mn_min show-for-large-up">0</td>
+                                                <td class="composition_mn_max show-for-large-up">1.5</td>
+                                            </tr>
+                                            <tr>
+                                                <td>P</td>
+                                                <td class="composition_p_result">0.080</td>
+                                                <td class="composition_p_min show-for-large-up">0</td>
+                                                <td class="composition_p_max show-for-large-up">0.025</td>
+                                            </tr>
+                                            <tr>
+                                                <td>S*</td>
+                                                <td class="composition_s_result">0.020</td>
+                                                <td class="composition_s_min show-for-large-up">0</td>
+                                                <td class="composition_s_max show-for-large-up">0.1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cr</td>
+                                                <td class="composition_cr_result">0.000</td>
+                                                <td class="composition_cr_min show-for-large-up">0</td>
+                                                <td class="composition_cr_max show-for-large-up">0.1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mo</td>
+                                                <td class="composition_mo_result">0.000</td>
+                                                <td class="composition_mo_min show-for-large-up">0</td>
+                                                <td class="composition_mo_max show-for-large-up">0.04</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ni</td>
+                                                <td class="composition_ni_result">0.000</td>
+                                                <td class="composition_ni_min show-for-large-up">0</td>
+                                                <td class="composition_ni_max show-for-large-up">0.15</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cu</td>
+                                                <td class="composition_cu_result">0.000</td>
+                                                <td class="composition_cu_min show-for-large-up">0</td>
+                                                <td class="composition_cu_max show-for-large-up">0.15</td>
+                                            </tr>
+                                            <tr>
+                                                <td>N*</td>
+                                                <td class="composition_n_result">0</td>
+                                                <td class="composition_n_min show-for-large-up">0</td>
+                                                <td class="composition_n_max show-for-large-up">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Nb</td>
+                                                <td class="composition_nb_result">0.000</td>
+                                                <td class="composition_nb_min show-for-large-up">0</td>
+                                                <td class="composition_nb_max show-for-large-up">0.05</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ti</td>
+                                                <td class="composition_ti_result">0.000</td>
+                                                <td class="composition_ti_min show-for-large-up">0</td>
+                                                <td class="composition_ti_max show-for-large-up">0.01</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </dd>
+                    <dd class="step4">
+                        <a href="#step4"><span class="bullet"></span> <span class="right">Step 4</span> <strong><script>pt('settings')</script></strong></a>
+                        <div id="step4" class="content">
+                            <div class="row">
+                                <div class="medium-6 columns">
+                                    <label for="hot_metal_temp"><strong><script>pt('select_temperature')</script> (&deg;C)</strong></label>
+                                    <input type="number" name="hotMetalTemp" id="hot_metal_temperature" min="1200" max="1400" value="1300" class="spinner">
+                                    <small><script>pt('other_materials_temperature')</script></small>
+                                </div>
+                                <div class="medium-6 columns">
+                                    <label for="stirring_gas_rate"><strong><script>pt('select_stirring')</script> (N2)</strong></label>
+                                    <input type="number" name="stirringGasRate" id="stirring_gas_rate" min="0" max="0.15" step="0.01" value="0.1" class="spinner">
+                                    <small><script>pt('cost_nitrogen')</script> $0.07/Nm<sup>3</sup></small>
+                                </div>
+                            </div>
+                        </div>
+                    </dd>
+                    <dd class="step5">
+                        <a href="#step5" class="show-summary"><span class="bullet"></span> <span class="right">Step 5</span> <strong><script>pt('summary')</script></strong></a>
+                        <div id="step5" class="content">
+                            <div class="row">
+                                <div class="large-3 columns">
+                                    <dl>
+                                        <dt><script>pt('user_level')</script></dt>
+                                        <dd class="selected-user-level"><script>pt('university_student')</script></dd>
+                                        <dt><script>pt('steel_grade')</script></dt>
+                                        <dd class="selected-steel-grade"><script>pt('construction_steel')</script></dd>
+                                        <dt><script>pt('hot_metal_temperature')</script></dt>
+                                        <dd class="hot-metal-temperature"><span class="value"></span>&deg;C</dd>
+                                        <dt><script>pt('stirring_gas_rate')</script></dt>
+                                        <dd class="stirring-gas-rate"><span class="value"></span> Nm&sup3;/min/tonne</dd>
+                                    </dl>
+                                    <div class="text-center show-for-large-up">
+                                        <button id="start_simulation" class="button small radius upper" data-goto-id="simulator"><script>pt('start_simulation')</script> <span class="fa fa-chevron-circle-right"></span></button>
+                                    </div>
+                                </div>
+                                <div class="medium-6 large-5 columns">
+                                    <dl>
+                                        <dt><script>pt('materials')</script></dt>
+                                        <dd>
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th><script>pt('raw_material')</script></th>
+                                                        <th><script>pt('unit_cost')</script></th>
+                                                        <th><script>pt('mass')</script></th>
+                                                        <th><script>pt('cost')</script></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><script>pt('hot_metal')</script></td>
+                                                        <td>$185.00/t</td>
+                                                        <td class="materials_hot_metal_mass"><span class="value">200</span> t</td>
+                                                        <td class="materials_hot_metal_cost">$ 37000</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><script>pt('light_scrap')</script></td>
+                                                        <td>$0.19/kg</td>
+                                                        <td class="materials_light_scrap_mass"><span class="value">0</span> kg</td>
+                                                        <td class="materials_light_scrap_cost">$ 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><script>pt('heavy_scrap')</script></td>
+                                                        <td>$0.15/kg</td>
+                                                        <td class="materials_heavy_scrap_mass"><span class="value">0</span> kg</td>
+                                                        <td class="materials_heavy_scrap_cost">$ 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><script>pt('iron_ore')</script></td>
+                                                        <td>$0.09/kg</td>
+                                                        <td class="materials_iron_mass"><span class="value">0</span> kg</td>
+                                                        <td class="materials_iron_cost">$ 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><script>pt('lime')</script></td>
+                                                        <td>$0.09/kg</td>
+                                                        <td class="materials_lime_mass"><span class="value">0</span> kg</td>
+                                                        <td class="materials_lime_cost">$ 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><script>pt('dolomite')</script></td>
+                                                        <td>$0.09/kg</td>
+                                                        <td class="materials_dolomite_mass"><span class="value">0</span> kg</td>
+                                                        <td class="materials_dolomite_cost">$ 0</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="2"><strong><script>pt('total')</script></strong></td>
+                                                        <td class="materials_total_mass">200 t</td>
+                                                        <td class="materials_total_cost">$ 37000</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3"><strong><script>pt('cost_per_tonne')</script></strong></td>
+                                                        <td class="materials_cost_per_tonne">$ 185/t</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </dd>
+                                    </dl>
+                                </div>
+                                <div class="medium-6 large-4 columns">
+                                    <dl>
+                                        <dt><script>pt('composition')</script></dt>
+                                        <dd>
+                                            <table class="composition-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th><script>pt('element')</script></th>
+                                                        <th><script>pt('result')</script></th>
+                                                        <th><script>pt('min')</script></th>
+                                                        <th><script>pt('max')</script></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>C*</td>
+                                                        <td class="composition_c_result">4.500</td>
+                                                        <td class="composition_c_min">0.1</td>
+                                                        <td class="composition_c_max">0.16</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Si*</td>
+                                                        <td class="composition_si_result">0.400</td>
+                                                        <td class="composition_si_min">0</td>
+                                                        <td class="composition_si_max">0.25</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Mn*</td>
+                                                        <td class="composition_mn_result">0.500</td>
+                                                        <td class="composition_mn_min">0</td>
+                                                        <td class="composition_mn_max">1.5</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>P</td>
+                                                        <td class="composition_p_result">0.080</td>
+                                                        <td class="composition_p_min">0</td>
+                                                        <td class="composition_p_max">0.025</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>S*</td>
+                                                        <td class="composition_s_result">0.020</td>
+                                                        <td class="composition_s_min">0</td>
+                                                        <td class="composition_s_max">0.1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Cr</td>
+                                                        <td class="composition_cr_result">0.000</td>
+                                                        <td class="composition_cr_min">0</td>
+                                                        <td class="composition_cr_max">0.1</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Mo</td>
+                                                        <td class="composition_mo_result">0.000</td>
+                                                        <td class="composition_mo_min">0</td>
+                                                        <td class="composition_mo_max">0.04</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ni</td>
+                                                        <td class="composition_ni_result">0.000</td>
+                                                        <td class="composition_ni_min">0</td>
+                                                        <td class="composition_ni_max">0.15</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Cu</td>
+                                                        <td class="composition_cu_result">0.000</td>
+                                                        <td class="composition_cu_min">0</td>
+                                                        <td class="composition_cu_max">0.15</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>N*</td>
+                                                        <td class="composition_n_result">0</td>
+                                                        <td class="composition_n_min">0</td>
+                                                        <td class="composition_n_max">0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Nb</td>
+                                                        <td class="composition_nb_result">0.000</td>
+                                                        <td class="composition_nb_min">0</td>
+                                                        <td class="composition_nb_max">0.05</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ti</td>
+                                                        <td class="composition_ti_result">0.000</td>
+                                                        <td class="composition_ti_min">0</td>
+                                                        <td class="composition_ti_max">0.01</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <div class="text-center hide-for-large-up">
+                                <button id="start_simulation" class="button radius upper" data-goto-id="simulator"><script>pt('start_simulation')</script> <span class="fa fa-chevron-circle-right"></span></button>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+            </form>
+        </section>
+        <section id="simulator" class="view">
+            <div id="help-drawer" class="drawer drawer-left closed">
+                <a href="#" class="handle"><span class="fa fa-bars fa-lg"></span></a>
+                <div class="drawer-content">
+                    <h4>Help</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, optio accusantium iure necessitatibus consequatur aut nisi neque unde rerum sit minima eius pariatur debitis voluptatibus autem adipisci maiores asperiores dolorum.</p>
+                </div>
+            </div>
+            <div id="control-drawer" class="drawer drawer-right closed">
+                <a href="#" class="handle"><span class="fa fa-bars fa-lg"></span></a>
+                <div class="drawer-content">
+                    <div class="row controls">
+                        <div class="columns">
+                            <ul class="small-block-grid-4 text-center">
+                                <li>
+                                    <h5>Simulation Rate</h5>
+                                    <input id="simulation_rate_control" type="range" class="slider simulation-rate" min="1" max="32" value="1" data-sldr-vertical="">
+                                </li>
+                                <li id="lance_control">
+                                    <h5>Lance Control</h5>
+                                    <a href="#" class="lance-retract button round"><span class="fa fa-angle-double-up fa-3x fa-fw"></span></a>
+                                    <a href="#" class="lance-up button round"><span class="fa fa-angle-up fa-3x fa-fw"></span></a>
+                                    <a href="#" class="lance-down button round"><span class="fa fa-angle-down fa-3x fa-fw"></span></a>
+                                    <div class="lance-label">
+                                        <span id="lance_position_label"></span>
+                                        <div>
+                                            <span id="lance_position_icon" class="fa"></span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <h5>Oxygen Flow Rate</h5>
+                                    <input type="range" id="oxygen_flow_control" class="slider oxygen-rate" value="0" max="3" step="0.01" disabled="disabled" data-sldr-vertical="">
+                                </li>
+                                <li>
+                                    <h5>Stirring Gas Rate</h5>
+                                    <input id="stirring_gas_control" type="range" class="slider gas-rate" min="0" max="0.15" step="0.01" value="0" data-sldr-vertical="">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row reports">
+                        <div class="columns">
+                            <ul class="button-group even-3 radius">
+                                <li><a href="#" class="take-sample button tiny"><script>pt('take_sample');</script></a></li>
+                                <li><a href="#" class="button tiny" data-reveal-id="additions"><script>pt('make_additions');</script></a></li>
+                                <li><a href="#" id="tap_steel" class="button tiny"><script>pt('tap_steel');</script></a></li>
+                            </ul>
+                            <ul class="button-group even-2 radius">
+                                <li><a href="#" class="button tiny" data-reveal-id="events_log"><script>pt('event_log');</script></a></li>
+                                <li><a href="#" class="open-analysis-results button tiny"><script>pt('chemical_analysis');</script></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <img id="steel_bit1" src="images/steel_bit1.53e131d1.png" class="hide">
+            <img id="steel_bit2" src="images/steel_bit2.42d05eed.png" class="hide">
+            <img id="steel_bit3" src="images/steel_bit3.3584fc60.png" class="hide">
+            <img id="steel_bit4" src="images/steel_bit4.42d05eed.png" class="hide">
+            <img id="steel_bit5" src="images/steel_bit5.df53105f.png" class="hide">
+
+
+            <div class="medium-7 large-7 columns">
+                <h3>Basic Oxygen Steelmaking Simulation</h3>
+
+                <div id="furnace_container">
+                    <img id="boiler_hood" src="images/boiler_hood.83bbb056.png" width="247" height="168">
+
+                    <div id="oxygen_lance_container">
+                        <img id="oxygen_lance" src="images/oxygen_lance.8056ff84.png" width="18" height="557">
+                        <div id="oxygen_lance_tip"></div>
+                        <div id="oxygen_stream">
+                            <img id="oxygen_stream_pattern" src="images/oxygen_stream_pattern.8667537f.png" width="1" height="8" class="hide">
+                            <img id="oxygen_stream_pattern_alt" src="images/oxygen_stream_pattern_alt.3364ccf2.png" width="1" height="8" class="hide">
+                            <canvas id="oxygen_stream_canvas" height="90" width="60"></canvas>
+                        </div>
+                    </div>
+                    <img id="sublance" src="images/sublance.557e397b.png" width="6" height="420">
+                     <div id="furnace">
+                        <img id="furnace_shell" src="images/furnace.418d5958.png" width="260" height="280">
+                        <div id="hot_metal_stream_container">
+                            <img id="hot_metal_stream" src="images/hot_metal_stream.99e474b0.png">
+                            <img id="hot_metal" src="images/hot_metal.878c4d6e.png">
+                        </div>
+
+                        <canvas id="slag"></canvas>
+                        <canvas id="inner_furnace" width="300" height=""></canvas>
+                        <canvas id="stirring_gas"></canvas>
+                        <canvas id="slag_bubbles"></canvas>
+                        <img id="furnace_scrap" src="images/scrap.2e3308ad.png" width="180" height="200">
+                    </div>
+                </div>
+            </div>
+            <div class="medium-5 large-5 columns gauges">
+                <ul class="small-block-grid-3">
+                    <li><div class="elapsed-time gauge" title="Elapsed Time" data-tooltip=""><span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span></div></li>
+                    <li><div class="liquid-steel-temperature gauge" title="Liquid steel temperature" data-tooltip=""><span class="value">0</span> &deg;C</div></li>
+                    <li><div class="total-oxygen-volume gauge" title="Total oxygen volume / Nm&sup3;" data-tooltip=""><span class="value">0</span></div></li>
+                </ul>
+                <div class="graphs">
+                    <canvas id="steel_composition_graph_cnv" width="390" height="200"></canvas>
+
+                    <canvas id="slag_composition_graph_cnv" width="390" height="200"></canvas>
+
+                    <canvas id="melting_path_cnv" width="390" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+        <section id="final_results" class="view">
+            <h3><script>pt('summary_results');</script></h3>
+            <dl class="accordion" data-accordion="">
+                <dd class="settings-summary active">
+                    <a href="#settings_summary"><span class="bullet"></span> <strong><script>pt('settings_summary')</script></strong></a>
+                    <div id="settings_summary" class="content active">
+                        <div class="row">
+                            <div class="large-3 columns">
+                                <dl>
+                                    <dt><script>pt('user_level')</script></dt>
+                                    <dd class="selected-user-level"><script>pt('university_student')</script></dd>
+                                    <dt><script>pt('steel_grade')</script></dt>
+                                    <dd class="selected-steel-grade"><script>pt('construction_steel')</script></dd>
+                                    <dt><script>pt('hot_metal_temperature')</script></dt>
+                                    <dd class="hot-metal-temperature"><span class="value"></span>&deg;C</dd>
+                                    <dt><script>pt('stirring_gas_rate')</script></dt>
+                                    <dd class="stirring-gas-rate"><span class="value"></span> Nm&sup3;/min/tonne</dd>
+                                </dl>
+                            </div>
+                            <div class="medium-6 large-5 columns">
+                                <dl>
+                                    <dt><script>pt('materials')</script></dt>
+                                    <dd>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><script>pt('raw_material')</script></th>
+                                                    <th><script>pt('unit_cost')</script></th>
+                                                    <th><script>pt('mass')</script></th>
+                                                    <th><script>pt('cost')</script></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><script>pt('hot_metal')</script></td>
+                                                    <td>$185.00/t</td>
+                                                    <td class="materials_hot_metal_mass"><span class="value">200</span> t</td>
+                                                    <td class="materials_hot_metal_cost">$ 37000</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><script>pt('light_scrap')</script></td>
+                                                    <td>$0.19/kg</td>
+                                                    <td class="materials_light_scrap_mass"><span class="value">0</span> kg</td>
+                                                    <td class="materials_light_scrap_cost">$ 0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><script>pt('heavy_scrap')</script></td>
+                                                    <td>$0.15/kg</td>
+                                                    <td class="materials_heavy_scrap_mass"><span class="value">0</span> kg</td>
+                                                    <td class="materials_heavy_scrap_cost">$ 0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><script>pt('iron_ore')</script></td>
+                                                    <td>$0.09/kg</td>
+                                                    <td class="materials_iron_mass"><span class="value">0</span> kg</td>
+                                                    <td class="materials_iron_cost">$ 0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><script>pt('lime')</script></td>
+                                                    <td>$0.09/kg</td>
+                                                    <td class="materials_lime_mass"><span class="value">0</span> kg</td>
+                                                    <td class="materials_lime_cost">$ 0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><script>pt('dolomite')</script></td>
+                                                    <td>$0.09/kg</td>
+                                                    <td class="materials_dolomite_mass"><span class="value">0</span> kg</td>
+                                                    <td class="materials_dolomite_cost">$ 0</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="2"><strong><script>pt('total')</script></strong></td>
+                                                    <td class="materials_total_mass">200 t</td>
+                                                    <td class="materials_total_cost">$ 37000</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3"><strong><script>pt('cost_per_tonne')</script></strong></td>
+                                                    <td class="materials_cost_per_tonne">$ 185/t</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="medium-6 large-4 columns">
+                                <dl>
+                                    <dt><script>pt('composition')</script></dt>
+                                    <dd>
+                                        <table class="composition-table">
+                                            <thead>
+                                                <tr>
+                                                    <th><script>pt('element')</script></th>
+                                                    <th><script>pt('result')</script></th>
+                                                    <th><script>pt('min')</script></th>
+                                                    <th><script>pt('max')</script></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>C*</td>
+                                                    <td class="composition_c_result">4.500</td>
+                                                    <td class="composition_c_min">0.1</td>
+                                                    <td class="composition_c_max">0.16</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Si*</td>
+                                                    <td class="composition_si_result">0.400</td>
+                                                    <td class="composition_si_min">0</td>
+                                                    <td class="composition_si_max">0.25</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mn*</td>
+                                                    <td class="composition_mn_result">0.500</td>
+                                                    <td class="composition_mn_min">0</td>
+                                                    <td class="composition_mn_max">1.5</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>P</td>
+                                                    <td class="composition_p_result">0.080</td>
+                                                    <td class="composition_p_min">0</td>
+                                                    <td class="composition_p_max">0.025</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>S*</td>
+                                                    <td class="composition_s_result">0.020</td>
+                                                    <td class="composition_s_min">0</td>
+                                                    <td class="composition_s_max">0.1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cr</td>
+                                                    <td class="composition_cr_result">0.000</td>
+                                                    <td class="composition_cr_min">0</td>
+                                                    <td class="composition_cr_max">0.1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mo</td>
+                                                    <td class="composition_mo_result">0.000</td>
+                                                    <td class="composition_mo_min">0</td>
+                                                    <td class="composition_mo_max">0.04</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ni</td>
+                                                    <td class="composition_ni_result">0.000</td>
+                                                    <td class="composition_ni_min">0</td>
+                                                    <td class="composition_ni_max">0.15</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cu</td>
+                                                    <td class="composition_cu_result">0.000</td>
+                                                    <td class="composition_cu_min">0</td>
+                                                    <td class="composition_cu_max">0.15</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>N*</td>
+                                                    <td class="composition_n_result">0</td>
+                                                    <td class="composition_n_min">0</td>
+                                                    <td class="composition_n_max">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Nb</td>
+                                                    <td class="composition_nb_result">0.000</td>
+                                                    <td class="composition_nb_min">0</td>
+                                                    <td class="composition_nb_max">0.05</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ti</td>
+                                                    <td class="composition_ti_result">0.000</td>
+                                                    <td class="composition_ti_min">0</td>
+                                                    <td class="composition_ti_max">0.01</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </dd>
+                <dd class="cost-breakdown">
+                    <a href="#cost_breakdown"><span class="bullet"></span> <strong><script>pt('cost_breakdown')</script></strong></a>
+                    <div id="cost_breakdown" class="content">
+                        <div class="row">
+                            <div class="medium-10 medium-centered columns">
+                                <table width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th><script>pt('target');</script></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong><script>pt('total_time');</script></strong></td>
+                                            <td id="final_results_actual_time"></td>
+                                            <td>
+                                                <span id="final_results_time_img" title="Prueba" class="tip-right fa fa-2x fa-times-circle" data-tooltip=""></span>
+                                            </td>
+                                            <td id="final_results_target_time"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><script>pt('tap_temperature');</script></strong></td>
+                                            <td id="final_results_actual_temperature"></td>
+                                            <td><span id="final_results_temperature_img" class="fa fa-2x fa-times-circle"></span></td>
+                                            <td id="final_results_target_temperature"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><script>pt('hot_metal');</script></strong></td>
+                                            <td id="final_results_hm_cost"></td>
+                                            <td><span class="fa fa-check-circle fa-2x"></span></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><script>pt('hot_metal_pretreatment');</script></strong></td>
+                                            <td id="final_results_hm_pre_cost"></td>
+                                            <td><span class="fa fa-check-circle fa-2x"></span></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><script>pt('additions');</script></strong></td>
+                                            <td id="final_results_additions_cost"></td>
+                                            <td><span class="fa fa-check-circle fa-2x"></span></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><script>pt('other_consumables');</script></strong></td>
+                                            <td id="final_results_other_cost"></td>
+                                            <td><span class="fa fa-check-circle fa-2x"></span></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><script>pt('total_cost');</script></td>
+                                            <td id="final_results_total_cost"></td>
+                                            <td><span class="fa fa-check-circle fa-2x"></span></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </dd>
+                <dd class="additional-info">
+                    <a href="#additional_info"><span class="bullet"></span> <strong><script>pt('additional_information')</script></strong></a>
+                    <div id="additional_info" class="content">
+                        <dl>
+                            <dt><script>pt('view_analysis');</script>:</dt>
+                            <dd>
+                                <ul class="button-group even-2 radius">
+                                    <li><a href="#" id="final_results_button" class="button small" data-reveal-id="complete_analysis_results"><strong><script>pt('final_steel_composition');</script></strong></a></li>
+                                    <li><a href="#" id="final_results_button" class="button small" data-reveal-id="slag_composition"><strong><script>pt('final_slag_composition');</script></strong></a></li>
+                                </ul>
+                            </dd>
+                            <a href="#" class="button expand radius small" data-reveal-id="events_log"><script>pt('view_event_log');</script></a>
+                        </dl>
+                    </div>
+                </dd>
+            </dl>
+        </section>
+    </div>
+    <footer>
+        <div class="separator">
+            <div class="color redbg"></div>
+            <div class="color greenbg"></div>
+            <div class="color orangebg"></div>
+            <div class="color yellowbg"></div>
+            <div class="color bluebg"></div>
+            <div class="color redbg"></div>
+        </div>
+    </footer>
+
+    <div id="popup" class="reveal-modal" data-reveal="">
+        <h2 class="popup-title"></h2>
+        <p class="popup-body"></p>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <div id="events_log" class="reveal-modal" data-reveal="">
+        <h2 class="popup-title"><script>pt('event_log');</script></h2>
+        <div id="events_log_body"></div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <div id="additions" class="reveal-modal" data-reveal="">
+        <h2><script>pt('make_additions');</script></h2>
+        <table width="100%">
+            <thead>
+                <tr>
+                    <td><script>pt('raw_material');</script></td>
+                    <td><script>pt('unit_cost');</script></td>
+                    <td><script>pt('mass');</script></td>
+                    <td><script>pt('cost');</script></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong><script>pt('iron_ore');</script></strong></td>
+                    <td>$85.00/t</td>
+                    <td class="spnr-center">
+                        <input type="number" id="additions_iron_mass" class="spinner materials_additions" min="0" max="5000" step="50" value="0">
+                    </td>
+                    <td id="additions_iron_cost">$ 0.00</td>
+                </tr>
+                <tr>
+                    <td><strong><script>pt('lime');</script></strong></td>
+                    <td>$85.00/t</td>
+                    <td class="spnr-center">
+                        <input type="number" id="additions_lime_mass" class="spinner materials_additions" min="0" max="5000" step="50" value="0">
+                    </td>
+                    <td id="additions_lime_cost">$ 0.00</td>
+                </tr>
+                <tr>
+                    <td><strong><script>pt('dolomite');</script></strong></td>
+                    <td>$85.00/t</td>
+                    <td class="spnr-center">
+                        <input type="number" id="additions_dolomite_mass" class="spinner materials_additions" min="0" max="5000" step="50" value="0">
+                    </td>
+                    <td id="additions_dolomite_cost">$ 0.00</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" class="text-right"><script>pt('total');</script></td>
+                    <td id="additions_total_mass">0 kg</td>
+                    <td id="additions_total_cost">$ 0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <ul class="button-group radius right">
+            <li><a class="clearform button small"><span class="fa fa-eraser fa-lg"></span> <script>pt('clear')</script></a></li>
+            <li><button id="additions_order_button" class="button small" disabled="disabled"><script>pt('order');</script></button></li>
+        </ul>
+
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <div id="partial_analysis_results" class="reveal-modal" data-reveal="">
+        <h1><script>pt('carbon_content');</script></h1>
+        <div id="partial_analysis_results_body">
+            <table width="100%" class="analysis_results_table">
+                <thead>
+                    <tr class="analysis_results_table_title">
+                        <td><script>pt('element');</script></td>
+                        <td><script>pt('current');</script></td>
+                        <td><script>pt('min');</script></td>
+                        <td><script>pt('max');</script></td>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="text-center">
+            <button id="partial_analysis_results_button" class="take-sample"><script>pt('take_new_sample');</script></button>
+        </div>
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <div id="complete_analysis_results" class="reveal-modal" data-reveal="">
+        <h1 id="complete_analysis_results_title"><script>pt('liquid_steel_composition');</script> / wt%</h1>
+
+        <div id="complete_analysis_results_body">
+            <table width="100%" class="analysis_results_table">
+                <thead>
+                    <tr class="analysis_results_table_title">
+                        <th><script>pt('element');</script></th>
+                        <th><script>pt('current');</script></th>
+                        <th></th>
+                        <th><script>pt('min');</script></th>
+                        <th><script>pt('max');</script></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+        <div class="text-center">
+            <button id="complete_analysis_results_button" class="take-sample"><script>pt('take_new_sample');</script></button>
+        </div>
+
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+    <div id="slag_composition" class="reveal-modal" data-reveal="">
+        <h1><script>pt('final_slag_composition');</script></h1>
+
+        <div id="slag_composition_body">
+            <table width="100%" id="slag_composition_table"></table>
+        </div>
+
+        <a class="close-reveal-modal">&#215;</a>
+    </div>
+
+
+    <script src="scripts/vendor/scripts.min.aab81d30.js"></script>
+    <script src="scripts/pubsub.e44a5cfb.js"></script>
+    <script src="scripts/drawers.7f89a17a.js"></script>
+    <script src="scripts/spnr.de50b700.js"></script>
+    <script src="scripts/sldr.274bfb98.js"></script>
+    <script src="scripts/utils.846cbfe5.js"></script>
+    <script src="scripts/options.faa28cb3.js"></script>
+    <script src="scripts/models.e9c81ff0.js"></script>
+    <script src="scripts/inner-furnace.c8f64b28.js"></script>
+    <script src="scripts/stirring-gas.f7915d6b.js"></script>
+    <script src="scripts/view.2ca8103c.js"></script>
+    <script src="scripts/control.42c2cb72.js"></script>
+    <script src="scripts/log.eabbc273.js"></script>
+    <script src="scripts/additions.4c95bafd.js"></script>
+    <script src="scripts/main.9dd9d3fb.js"></script>
+</body>
+</html>
