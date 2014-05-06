@@ -781,26 +781,27 @@ function BOFModel(sg) {
 
         for (i = 0; i < array.length; i++) {
             tempCurrent = parseFloat(comp[this.getElementIndex(array[i])] * 100);
-            color = 'green';
+            color = 'fa-check-circle';
             tempMin = this.steelGrade.minimumComposition.componentArray[this.getElementIndex(array[i])];
             if (tempMin) {
                 tempMin = parseFloat(tempMin.fraction);
-                color = (tempCurrent >= tempMin) ? 'green' : 'red';
+                color = (tempCurrent >= tempMin) ? 'check' : 'times';
             } else {
                 tempMin = 0;
             }
             tempMax = this.steelGrade.maximumComposition.componentArray[this.getElementIndex(array[i])];
             if (tempMax) {
                 tempMax = parseFloat(tempMax.fraction);
-                color = (tempCurrent <= tempMax) ? 'green' : 'red';
+                color = (tempCurrent <= tempMax) ? 'check' : 'times';
             } else {
                 tempMax = 0;
             }
-            if (color == 'red') {
+            if (color == 'times') {
                 result = 'fa-times-circle';
             }
-            str += '<tr class="' + color + '"><td>' + array[i] + (this.getIsReducable(array[i]) ? '*' : '') + '</td>';
+            str += '<tr><td>' + array[i] + (this.getIsReducable(array[i]) ? '*' : '') + '</td>';
             str += (tempCurrent > 0) ? '<td>' + tempCurrent.toFixed(5) + '</td>' : '<td></td>';
+            str += '<td><span class="fa fa-' + color + '-circle fa-2x"></span></td>';
             str += (tempMin > 0) ? '<td>' + tempMin.toFixed(4) + '</td>' : '<td></td>';
             str += (tempMax > 0) ? '<td>' + tempMax.toFixed(4) + '</td></tr>' : '<td></td></tr>';
         }

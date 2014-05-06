@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Basic Oxygen Steelmaking Simulation</title>
-    <link rel="stylesheet" href="styles/main.min.c0168836.css"/>
+    <link rel="stylesheet" href="styles/main.min.a4992437.css"/>
     <script src="//use.edgefonts.net/play.js"></script>
     <script src="scripts/vendor/init.min.c7e49a75.js"></script>
     <script>
@@ -53,16 +53,17 @@
             <div class="color yellowbg"></div>
             <div class="color bluebg"></div>
             <div class="color redbg"></div>
+            <div class="gradient"><h5><script>pt('basic_oxygen_steelmaking')</script></h5></div>
         </div>
     </header>
     <div id="sim_body">
         <section id="intro" class="view background">
-            <h1><script>pt('basic_oxygen_steelmaking')</script></h1>
-            <div class="description panel callout">
+            <div class="description">
+                <h3><script>pt('introduction_title')</script></h3>
                 <script>pt('introduction_body')</script>
-            </div>
-            <div class="intro-buttons">
-                <a href="#" class="button expand upper" data-goto-id="options"><script>pt('intro_start')</script> <span class="fa fa-chevron-circle-right"></span></a>
+                <div class="intro-buttons">
+                    <a href="#" class="button expand radius upper" data-goto-id="options"><script>pt('intro_start')</script> <span class="fa fa-chevron-circle-right"></span></a>
+                </div>
             </div>
         </section>
         <section id="options" class="view">
@@ -483,45 +484,44 @@
             </form>
         </section>
         <section id="simulator" class="view">
-            <div id="help-drawer" class="drawer drawer-left closed">
+            <div id="help-drawer" class="drawer drawer-left">
                 <a href="#" class="handle"><span class="fa fa-bars fa-lg"></span></a>
                 <div class="drawer-content">
                     <h4>Help</h4>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, optio accusantium iure necessitatibus consequatur aut nisi neque unde rerum sit minima eius pariatur debitis voluptatibus autem adipisci maiores asperiores dolorum.</p>
                 </div>
             </div>
-            <div id="control-drawer" class="drawer drawer-right closed">
+            <div id="control-drawer" class="drawer drawer-right">
                 <a href="#" class="handle"><span class="fa fa-bars fa-lg"></span></a>
                 <div class="drawer-content">
-                    <div class="row controls">
-                        <div class="columns">
-                            <ul class="small-block-grid-4 text-center">
-                                <li>
-                                    <h5>Simulation Rate</h5>
-                                    <input id="simulation_rate_control" type="range" class="slider simulation-rate" min="1" max="32" value="1" data-sldr-vertical="">
-                                </li>
-                                <li id="lance_control">
-                                    <h5>Lance Control</h5>
-                                    <a href="#" class="lance-retract button round"><span class="fa fa-angle-double-up fa-3x fa-fw"></span></a>
-                                    <a href="#" class="lance-up button round"><span class="fa fa-angle-up fa-3x fa-fw"></span></a>
-                                    <a href="#" class="lance-down button round"><span class="fa fa-angle-down fa-3x fa-fw"></span></a>
-                                    <div class="lance-label">
-                                        <span id="lance_position_label"></span>
-                                        <div>
-                                            <span id="lance_position_icon" class="fa"></span>
-                                        </div>
+                    <div class="main-controls">
+                        <ul class="small-block-grid-4 text-center">
+                            <li>
+                                <h5>Simulation Rate</h5>
+                                <input id="simulation_rate_control" type="range" class="slider simulation-rate" min="1" max="32" value="1" data-sldr-vertical="">
+                            </li>
+                            <li id="lance_control">
+                                <h5>Lance Control</h5>
+                                <a href="#" class="lance-retract button round"><span class="fa fa-angle-double-up fa-3x fa-fw"></span></a>
+                                <a href="#" class="lance-up button round"><span class="fa fa-angle-up fa-3x fa-fw"></span></a>
+                                <a href="#" class="lance-down button round"><span class="fa fa-angle-down fa-3x fa-fw"></span></a>
+                                <div class="lance-label">
+                                    <span id="lance_position_label"></span>
+                                    <div>
+                                        <span id="lance_position_icon" class="fa"></span>
                                     </div>
-                                </li>
-                                <li>
-                                    <h5>Oxygen Flow Rate</h5>
-                                    <input type="range" id="oxygen_flow_control" class="slider oxygen-rate" value="0" max="3" step="0.01" disabled="disabled" data-sldr-vertical="">
-                                </li>
-                                <li>
-                                    <h5>Stirring Gas Rate</h5>
-                                    <input id="stirring_gas_control" type="range" class="slider gas-rate" min="0" max="0.15" step="0.01" value="0" data-sldr-vertical="">
-                                </li>
-                            </ul>
-                        </div>
+                                </div>
+                            </li>
+                            <li>
+                                <h5>Oxygen Flow Rate</h5>
+                                <input type="range" id="oxygen_flow_control" class="slider oxygen-rate" value="0" max="3" step="0.01" disabled="disabled" data-sldr-vertical="">
+                            </li>
+                            <li>
+                                <h5>Stirring Gas Rate</h5>
+                                <input id="stirring_gas_control" type="range" class="slider gas-rate" min="0" max="0.15" step="0.01" value="0" data-sldr-vertical="">
+                            </li>
+                        </ul>
+                        <a href="#" class="info" data-info=""></a>
                     </div>
 
                     <div class="row reports">
@@ -548,49 +548,77 @@
             <img id="steel_bit5" src="images/steel_bit5.df53105f.png" class="hide">
 
 
-            <div class="medium-7 large-7 columns">
-                <h3>Basic Oxygen Steelmaking Simulation</h3>
+            <div class="medium-6 large-6 columns">
+                <div class="sim-animation border">
+                    <ul class="small-block-grid-3">
+                        <li>
+                            <script>
+                                document.write('<div class="elapsed-time gauge" title="'+gt('elapsed_time')+'" data-tooltip><span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span></div>');
+                            </script>
+                        </li>
+                        <li>
+                            <script>
+                                document.write('<div class="liquid-steel-temperature gauge" title="'+gt('liquid_steel_temperature')+'" data-tooltip><span class="value">0</span> &deg;C</div>');
+                            </script>
+                        </li>
+                        <li>
+                            <script>
+                                document.write('<div class="total-oxygen-volume gauge" title="'+gt('total_oxygen_volume')+' / Nm&sup3;" data-tooltip><span class="value">0</span></div>');
+                            </script>
+                        </li>
+                    </ul>
 
-                <div id="furnace_container">
-                    <img id="boiler_hood" src="images/boiler_hood.83bbb056.png" width="247" height="168">
+                    <div id="furnace_container">
+                        <img id="boiler_hood" src="images/boiler_hood.83bbb056.png" width="247" height="168">
 
-                    <div id="oxygen_lance_container">
-                        <img id="oxygen_lance" src="images/oxygen_lance.8056ff84.png" width="18" height="557">
-                        <div id="oxygen_lance_tip"></div>
-                        <div id="oxygen_stream">
-                            <img id="oxygen_stream_pattern" src="images/oxygen_stream_pattern.8667537f.png" width="1" height="8" class="hide">
-                            <img id="oxygen_stream_pattern_alt" src="images/oxygen_stream_pattern_alt.3364ccf2.png" width="1" height="8" class="hide">
-                            <canvas id="oxygen_stream_canvas" height="90" width="60"></canvas>
+                        <div id="oxygen_lance_container">
+                            <img id="oxygen_lance" src="images/oxygen_lance.8056ff84.png" width="18" height="557">
+                            <div id="oxygen_lance_tip"></div>
+                            <div id="oxygen_stream">
+                                <img id="oxygen_stream_pattern" src="images/oxygen_stream_pattern.8667537f.png" width="1" height="8" class="hide">
+                                <img id="oxygen_stream_pattern_alt" src="images/oxygen_stream_pattern_alt.3364ccf2.png" width="1" height="8" class="hide">
+                                <canvas id="oxygen_stream_canvas" height="90" width="60"></canvas>
+                            </div>
                         </div>
-                    </div>
-                    <img id="sublance" src="images/sublance.557e397b.png" width="6" height="420">
-                     <div id="furnace">
-                        <img id="furnace_shell" src="images/furnace.418d5958.png" width="260" height="280">
-                        <div id="hot_metal_stream_container">
-                            <img id="hot_metal_stream" src="images/hot_metal_stream.99e474b0.png">
-                            <img id="hot_metal" src="images/hot_metal.878c4d6e.png">
-                        </div>
+                        <img id="sublance" src="images/sublance.557e397b.png" width="6" height="420">
+                         <div id="furnace">
+                            <img id="furnace_shell" src="images/furnace.418d5958.png" width="260" height="280">
+                            <div id="hot_metal_stream_container">
+                                <img id="hot_metal_stream" src="images/hot_metal_stream.99e474b0.png">
+                                <img id="hot_metal" src="images/hot_metal.878c4d6e.png">
+                            </div>
 
-                        <canvas id="slag"></canvas>
-                        <canvas id="inner_furnace" width="300" height=""></canvas>
-                        <canvas id="stirring_gas"></canvas>
-                        <canvas id="slag_bubbles"></canvas>
-                        <img id="furnace_scrap" src="images/scrap.2e3308ad.png" width="180" height="200">
+                            <canvas id="slag"></canvas>
+                            <canvas id="inner_furnace" width="300" height=""></canvas>
+                            <canvas id="stirring_gas"></canvas>
+                            <canvas id="slag_bubbles"></canvas>
+                            <img id="furnace_scrap" src="images/scrap.2e3308ad.png" width="180" height="200">
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="medium-5 large-5 columns gauges">
-                <ul class="small-block-grid-3">
-                    <li><div class="elapsed-time gauge" title="Elapsed Time" data-tooltip=""><span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span></div></li>
-                    <li><div class="liquid-steel-temperature gauge" title="Liquid steel temperature" data-tooltip=""><span class="value">0</span> &deg;C</div></li>
-                    <li><div class="total-oxygen-volume gauge" title="Total oxygen volume / Nm&sup3;" data-tooltip=""><span class="value">0</span></div></li>
-                </ul>
+            <div class="medium-6 large-6 columns gauges">
                 <div class="graphs">
-                    <canvas id="steel_composition_graph_cnv" width="390" height="200"></canvas>
+                    <div class="graph-wrapper border">
+                        <script>
+                            document.write('<div id="steel_composition_graph" class="graph tip-left" title="'+gt('steel_composition_graph_title')+'" data-tooltip></div>');
+                        </script>
+                        <a href="#" class="info" data-info=""></a>
+                    </div>
 
-                    <canvas id="slag_composition_graph_cnv" width="390" height="200"></canvas>
+                    <div class="graph-wrapper border">
+                        <script>
+                            document.write('<div id="slag_composition_graph" title="'+gt('slag_composition_graph_title')+'" class="graph tip-left" data-tooltip></div>');
+                        </script>
+                        <a href="#" class="info" data-info=""></a>
+                    </div>
 
-                    <canvas id="melting_path_cnv" width="390" height="200"></canvas>
+                    <div class="graph-wrapper border">
+                        <script>
+                            document.write('<div id="melting_path_graph" title="'+gt('melting_path_graph_title')+'" class="graph tip-left" data-tooltip></div>');
+                        </script>
+                        <a href="#" class="info" data-info=""></a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -792,7 +820,7 @@
                                             <td><strong><script>pt('total_time');</script></strong></td>
                                             <td id="final_results_actual_time"></td>
                                             <td>
-                                                <span id="final_results_time_img" title="Prueba" class="tip-right fa fa-2x fa-times-circle" data-tooltip=""></span>
+                                                <span id="final_results_time_img" title="Prueba" class="tip-right fa fa-2x fa-times-circle"></span>
                                             </td>
                                             <td id="final_results_target_time"></td>
                                         </tr>
@@ -858,31 +886,26 @@
             </dl>
         </section>
     </div>
-    <footer>
-        <div class="separator">
-            <div class="color redbg"></div>
-            <div class="color greenbg"></div>
-            <div class="color orangebg"></div>
-            <div class="color yellowbg"></div>
-            <div class="color bluebg"></div>
-            <div class="color redbg"></div>
+    <footer id="sim_footer">
+        <div class="row">
+            <div class="columns footer-bg"></div>
         </div>
     </footer>
 
     <div id="popup" class="reveal-modal" data-reveal="">
-        <h2 class="popup-title"></h2>
+        <h3 class="popup-title"></h3>
         <p class="popup-body"></p>
         <a class="close-reveal-modal">&#215;</a>
     </div>
 
     <div id="events_log" class="reveal-modal" data-reveal="">
-        <h2 class="popup-title"><script>pt('event_log');</script></h2>
+        <h3 class="popup-title"><script>pt('event_log');</script></h3>
         <div id="events_log_body"></div>
         <a class="close-reveal-modal">&#215;</a>
     </div>
 
     <div id="additions" class="reveal-modal" data-reveal="">
-        <h2><script>pt('make_additions');</script></h2>
+        <h3><script>pt('make_additions');</script></h3>
         <table width="100%">
             <thead>
                 <tr>
@@ -1002,20 +1025,20 @@
     </div>
 
 
-    <script src="scripts/vendor/scripts.min.aab81d30.js"></script>
+    <script src="scripts/vendor/scripts.min.b6c5e540.js"></script>
     <script src="scripts/pubsub.e44a5cfb.js"></script>
     <script src="scripts/drawers.7f89a17a.js"></script>
     <script src="scripts/spnr.de50b700.js"></script>
     <script src="scripts/sldr.274bfb98.js"></script>
     <script src="scripts/utils.846cbfe5.js"></script>
-    <script src="scripts/options.faa28cb3.js"></script>
-    <script src="scripts/models.e9c81ff0.js"></script>
+    <script src="scripts/options.3e6fc514.js"></script>
+    <script src="scripts/models.a77e154b.js"></script>
     <script src="scripts/inner-furnace.c8f64b28.js"></script>
     <script src="scripts/stirring-gas.f7915d6b.js"></script>
-    <script src="scripts/view.2ca8103c.js"></script>
+    <script src="scripts/view.241570b6.js"></script>
     <script src="scripts/control.42c2cb72.js"></script>
-    <script src="scripts/log.eabbc273.js"></script>
+    <script src="scripts/log.5aaa287e.js"></script>
     <script src="scripts/additions.4c95bafd.js"></script>
-    <script src="scripts/main.9dd9d3fb.js"></script>
+    <script src="scripts/main.1027ffe3.js"></script>
 </body>
 </html>

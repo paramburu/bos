@@ -27,12 +27,6 @@
                 that.gotoView(next);
                 e.preventDefault();
             });
-
-            $(window).on('popstate', function(e) {
-                var oe = e.originalEvent;
-
-                that.gotoView(oe.state);
-            });
         },
         gotoView: function(next) {
             this.trigger('goto.view', {
@@ -44,6 +38,8 @@
             document.getElementById(next).style.display = 'inherit';
 
             this.currentView = next;
+
+            this.trigger('goneto.view', this.currentView);
         }
     };
 
@@ -108,118 +104,236 @@
         },
 
         initGraphs = function() {
-            graphs.steelCompositionGraph = new RGraph.Line('steel_composition_graph_cnv', [bofModel.steel.composition[bofModel.getElementIndex("C")] * 100], [bofModel.steel.composition[bofModel.getElementIndex("Si")] * 100], [bofModel.steel.composition[bofModel.getElementIndex("Mn")] * 100], [bofModel.steel.composition[bofModel.getElementIndex("P")] * 1000]);
-            graphs.steelCompositionGraph.Set('labels', [0]);
+            Highcharts.setOptions({
+                chart: {
+                    resetZoomButton: {
+                        theme: {
+                            fill: 'white',
+                            stroke: 'silver',
+                            r: 0,
+                            states: {
+                                hover: {
+                                    fill: '#41739D',
+                                    style: {
+                                        color: 'white'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: false
+                        }
+                    },
+                    series: {
+                        marker: {
+                            states: {
+                                hover: {
+                                    radius: 4
+                                }
+                            },
+                        },
+                        states: {
+                            hover: {
+                                halo: {
+                                    size: 8
+                                }
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    layout: 'vertical',
+                    verticalAlign: 'middle',
+                    itemStyle: {
+                        paddingBottom: 20
+                    }
+                },
+                yAxis: {
+                    gridLineDashStyle: 'Dash'
+                }
+            });
 
-            graphs.steelCompositionGraph.Set('ymax', 5);
-            graphs.steelCompositionGraph.Set('scale.zerostart', true);
-            graphs.steelCompositionGraph.Set('background.grid.hlines', true);
-            graphs.steelCompositionGraph.Set('background.grid.vlines', false);
-            graphs.steelCompositionGraph.Set('linewidth', 2);
-            graphs.steelCompositionGraph.Set('colors', ['#DD0000', '#000000', '#00DD00', '#0000DD']);
-            graphs.steelCompositionGraph.Set('yaxispos', 'left');
-            graphs.steelCompositionGraph.Set('axis.color', '#999999');
-            graphs.steelCompositionGraph.Set('text.color', '#000000');
-            graphs.steelCompositionGraph.Set('gutter.top', 45);
-            graphs.steelCompositionGraph.Set('gutter.bottom', 40);
-            graphs.steelCompositionGraph.Set('gutter.left', 40);
-            graphs.steelCompositionGraph.Set('gutter.right', 10);
-
-            graphs.steelCompositionGraph.Set('title', gt('steel_composition_graph_title'));
-            graphs.steelCompositionGraph.Set('title.size', 10);
-            graphs.steelCompositionGraph.Set('title.xaxis', gt('minutes_after_start'));
-            graphs.steelCompositionGraph.Set('title.xaxis.bold', false);
-            graphs.steelCompositionGraph.Set('title.xaxis.size', 10);
-
-            graphs.steelCompositionGraph.Set('key', ['wt-%C', 'wt-%Si', 'wt-%Mn', 'wt-%P*10']);
-            graphs.steelCompositionGraph.Set('key.text.color', ['#DD0000', '#000000', '#00DD00', '#0000DD']);
-            graphs.steelCompositionGraph.Set('key.position', 'gutter');
-            graphs.steelCompositionGraph.Set('key.position.y', 30);
-
-            graphs.steelCompositionGraph.Draw();
-
+            graphs.steelCompositionGraph = new Highcharts.Chart({
+                chart: {
+                    type: 'spline',
+                    renderTo: 'steel_composition_graph',
+                    zoomType: 'x'
+                },
+                title: {
+                    text: null
+                },
+                credits: {
+                    text: 'steeluniversity.com',
+                    href: 'http://www.steeluniversity.com'
+                },
+                tooltip: {
+                    shared: true,
+                    valueDecimals: 2
+                },
+                series: [{
+                    name: 'C',
+                    id: 'C',
+                    yAxis: 1,
+                    data: [bofModel.steel.composition[bofModel.getElementIndex("C")] * 100]
+                },{
+                    name: 'Si',
+                    id: 'Si',
+                    data: [bofModel.steel.composition[bofModel.getElementIndex("Si")] * 100]
+                },{
+                    name: 'Mn',
+                    id: 'Mn',
+                    data: [bofModel.steel.composition[bofModel.getElementIndex("Mn")] * 100]
+                },{
+                    name: 'P',
+                    id: 'P',
+                    data: [bofModel.steel.composition[bofModel.getElementIndex("P")] * 100]
+                }],
+                xAxis: {
+                    title: {
+                        text: 'T[min]'
+                    },
+                    min: 0,
+                    minRange: 10
+                },
+                yAxis: [{
+                    title: {
+                        text: 'Wt% Si Mn P'
+                    },
+                    labels: {
+                        // style: {
+                        //     color: Highcharts.getOptions().colors[3]
+                        // }
+                    },
+                    max: 1,
+                    min: 0,
+                    minTickInterval: 0.01
+                },{
+                    title: {
+                        text: 'Wt%C'
+                    },
+                    labels: {
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                    max: 5,
+                    min: 0,
+                    minTickInterval: 0.01
+                }]
+            });
 
             /************************/
             //  SLAG COMPOSITION    //
             /************************/
-            graphs.slagCompositionGraph = new RGraph.Line('slag_composition_graph_cnv', [bofModel.slag.composition[bofModel.getCompoundIndex("SiO2")] * 100], [bofModel.slag.composition[bofModel.getCompoundIndex("FeO")] * 100], [bofModel.slag.composition[bofModel.getCompoundIndex("MnO")] * 100], [bofModel.slag.composition[bofModel.getCompoundIndex("CaO")] * 100], [bofModel.slag.composition[bofModel.getCompoundIndex("MgO")] * 100]);
 
-            graphs.slagCompositionGraph.Set('labels', [0]);
-
-            graphs.slagCompositionGraph.Set('ymax', 100);
-            graphs.slagCompositionGraph.Set('numyticks', 4);
-            graphs.slagCompositionGraph.Set('ylabels.count', 4);
-            graphs.slagCompositionGraph.Set('scale.zerostart', true);
-            graphs.slagCompositionGraph.Set('background.grid.hlines', true);
-            graphs.slagCompositionGraph.Set('background.grid.vlines', false);
-            graphs.slagCompositionGraph.Set('linewidth', 2);
-            graphs.slagCompositionGraph.Set('colors', ['#000000', '#DD0000', '#00DD00', '#FFFFFF', '#FFFF33']);
-            graphs.slagCompositionGraph.Set('yaxispos', 'left');
-            graphs.slagCompositionGraph.Set('axis.color', '#999999');
-            graphs.slagCompositionGraph.Set('text.color', '#000000');
-            graphs.slagCompositionGraph.Set('gutter.top', 45);
-            graphs.slagCompositionGraph.Set('gutter.bottom', 40);
-            graphs.slagCompositionGraph.Set('gutter.left', 40);
-            graphs.slagCompositionGraph.Set('gutter.right', 10);
-
-
-            graphs.slagCompositionGraph.Set('title', gt('slag_composition_graph_title'));
-            graphs.slagCompositionGraph.Set('title.size', 10);
-            graphs.slagCompositionGraph.Set('title.xaxis', gt('minutes_after_start'));
-            graphs.slagCompositionGraph.Set('title.xaxis.bold', false);
-            graphs.slagCompositionGraph.Set('title.xaxis.size', 10);
-
-            graphs.slagCompositionGraph.Set('key', ['%SiO2', '%FeOx', '%MnO', '%CaO', '%MgO']);
-            graphs.slagCompositionGraph.Set('key.text.color', ['#000000', '#DD0000', '#00DD00', '#FFFFFF', '#FFFF33']);
-            graphs.slagCompositionGraph.Set('key.position', 'gutter');
-            graphs.slagCompositionGraph.Set('key.position.y', 30);
-
-            graphs.slagCompositionGraph.Draw();
+            graphs.slagCompositionGraph = new Highcharts.Chart({
+                chart: {
+                    type: 'spline',
+                    renderTo: 'slag_composition_graph',
+                    zoomType: 'x'
+                },
+                title: {
+                    text: null
+                },
+                credits: {
+                    text: 'steeluniversity.com',
+                    href: 'http://www.steeluniversity.com'
+                },
+                tooltip: {
+                    shared: true,
+                    valueDecimals: 2
+                },
+                series: [{
+                    name: 'SiO2',
+                    id: 'SiO2',
+                    data: [bofModel.slag.composition[bofModel.getCompoundIndex("SiO2")] * 100]
+                },{
+                    name: 'FeO',
+                    id: 'FeO',
+                    data: [bofModel.slag.composition[bofModel.getCompoundIndex("FeO")] * 100]
+                },{
+                    name: 'MnO',
+                    id: 'MnO',
+                    data: [bofModel.slag.composition[bofModel.getCompoundIndex("MnO")] * 100]
+                },{
+                    name: 'CaO',
+                    id: 'CaO',
+                    data: [bofModel.slag.composition[bofModel.getCompoundIndex("CaO")] * 100]
+                },{
+                    name: 'MgO',
+                    id: 'MgO',
+                    data: [bofModel.slag.composition[bofModel.getCompoundIndex("MgO")] * 100]
+                }],
+                xAxis: {
+                    title: {
+                        text: 'T[min]'
+                    },
+                    min: 0,
+                    minRange: 10
+                },
+                yAxis: {
+                    title: {
+                        text: 'Wt%'
+                    },
+                    max: 100,
+                    min: 0,
+                    minTickInterval: 0.01
+                }
+            });
 
 
             /************************/
             //      MELTING PATH    //
             /************************/
-            graphs.meltingPathGraph = new RGraph.Scatter('melting_path_cnv', [
-                [bofModel.steel.composition[bofModel.getElementIndex("C")] * 100, bofModel.steel.temperature - 273]
-            ]);
-
-            graphs.meltingPathGraph.Set('scale.zerostart', true);
-            graphs.meltingPathGraph.Set('xmin', 0);
-            graphs.meltingPathGraph.Set('xmax', 5.0);
-            graphs.meltingPathGraph.Set('ymin', 1000);
-            graphs.meltingPathGraph.Set('ymax', 1800);
-
-            graphs.meltingPathGraph.Set('background.grid', false);
-            graphs.meltingPathGraph.Set('background.image', document.getElementById('melting_path_bg').src);
-            graphs.meltingPathGraph.Set('background.image.stretch', true);
-
-            graphs.meltingPathGraph.Set('xscale', true);
-            graphs.meltingPathGraph.Set('xscale.decimals', 1);
-            graphs.meltingPathGraph.Set('tickmarks', 'circle');
-            graphs.meltingPathGraph.Set('ticksize', 8);
-            graphs.meltingPathGraph.Set('defaultcolor', '#B70000');
-            graphs.meltingPathGraph.Set('numyticks', 8);
-            graphs.meltingPathGraph.Set('ylabels.specific', ['1800', '1700', '1600', '1500', '1400', '1300', '1200', '1100', '1000'])
-            graphs.meltingPathGraph.Set('title.yaxis', 'T / Celsius');
-            graphs.meltingPathGraph.Set('title.yaxis.size', 10);
-            graphs.meltingPathGraph.Set('title.yaxis.bold', false);
-            graphs.meltingPathGraph.Set('title.yaxis.x', 30);
-
-            graphs.meltingPathGraph.Set('axis.color', 'black');
-            graphs.meltingPathGraph.Set('text.color', '#000000');
-            graphs.meltingPathGraph.Set('gutter.top', 25);
-            graphs.meltingPathGraph.Set('gutter.bottom', 30);
-            graphs.meltingPathGraph.Set('gutter.left', 80);
-            graphs.meltingPathGraph.Set('gutter.right', 10);
-
-            graphs.meltingPathGraph.Set('title', gt('melting_path_graph_title'));
-            graphs.meltingPathGraph.Set('title.size', 10);
-            graphs.meltingPathGraph.Set('title.xaxis', 'wt-%C');
-            graphs.meltingPathGraph.Set('title.xaxis.bold', false);
-            graphs.meltingPathGraph.Set('title.xaxis.size', 10);
-
-            graphs.meltingPathGraph.Draw();
+            graphs.meltingPathGraph = new Highcharts.Chart({
+                chart: {
+                    type: 'scatter',
+                    renderTo: 'melting_path_graph',
+                    plotBackgroundImage: document.getElementById('melting_path_bg').src
+                },
+                title: {
+                    text: null
+                },
+                credits: {
+                    text: 'steeluniversity.com',
+                    href: 'http://www.steeluniversity.com'
+                },
+                tooltip: {
+                    useHTML: true,
+                    valueSuffix: '&deg;C'
+                },
+                legend: {
+                    enabled: false
+                },
+                xAxis: {
+                    title: {
+                        text: 'Wt%C'
+                    },
+                    min: 0,
+                    max: 5,
+                    minorGridLineWidth: 0,
+                },
+                yAxis: {
+                    title: {
+                        text: '&deg;C',
+                        useHTML: true
+                    },
+                    tickWidth: 1,
+                    lineWidth: 1,
+                    gridLineWidth: 0,
+                    min: 1000,
+                    max: 1800
+                },
+                series: [{
+                    name: '%C / T',
+                    data: [[bofModel.steel.composition[bofModel.getElementIndex("C")] * 100, bofModel.steel.temperature - 273]]
+                }]
+            });
         },
 
         openAnalysisResultsDialog = function() {

@@ -14,7 +14,20 @@
                 bofView.init();
 
                 bofControl.startSimulation();
+
                 break;
+        }
+    });
+
+    pubsub.on('goneto.view', function (e, view) {
+        switch (view) {
+            case 'simulator':
+                bofView.steelCompositionGraph.reflow();
+                bofView.slagCompositionGraph.reflow();
+                bofView.meltingPathGraph.reflow();
+
+                $('.drawer').addClass('closed');
+            break;
         }
     });
 

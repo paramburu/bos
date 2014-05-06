@@ -98,7 +98,7 @@
                 massForComposition = Math.floor((parseFloat(hotMetalMass.value * 1000) + parseFloat(lightScrapMass.value) +
                     parseFloat(heavyScrapMass.value)) / 1000);
 
-                totalMass.innerHTML = massTotal + " t";
+                totalMass.html(massTotal + " t");
                 totalCost.html("$ " + costTotal);
                 totalCostPerTonne.html("$ " + parseFloat(costTotal / massTotal).toFixed(0) + "\/t");
 

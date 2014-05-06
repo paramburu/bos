@@ -112,27 +112,19 @@ function BOSLog() {
         this.slagCompLog_array.push(slc.concat());
 
         /*Steel Composition Graph*/
-        bofView.steelCompositionGraph.Get('labels').push((Math.floor(ti / 60) % 5 == 0) ? Math.floor(ti / 60) : "");
-        bofView.steelCompositionGraph.original_data[0].push(stc[bofModel.getElementIndex("C")] * 100);
-        bofView.steelCompositionGraph.original_data[1].push(stc[bofModel.getElementIndex("Si")] * 100);
-        bofView.steelCompositionGraph.original_data[2].push(stc[bofModel.getElementIndex("Mn")] * 100);
-        bofView.steelCompositionGraph.original_data[3].push(stc[bofModel.getElementIndex("P")] * 1000);
-        RGraph.Clear(document.getElementById("steel_composition_graph_cnv"));
-        bofView.steelCompositionGraph.Draw();
+        bofView.steelCompositionGraph.get('C').addPoint(stc[bofModel.getElementIndex("C")] * 100);
+        bofView.steelCompositionGraph.get('Si').addPoint(stc[bofModel.getElementIndex("Si")] * 100);
+        bofView.steelCompositionGraph.get('Mn').addPoint(stc[bofModel.getElementIndex("Mn")] * 100);
+        bofView.steelCompositionGraph.get('P').addPoint(stc[bofModel.getElementIndex("P")] * 100);
 
         /*Slag Composition Graph*/
-        bofView.slagCompositionGraph.Get('labels').push((Math.floor(ti / 60) % 5 == 0) ? Math.floor(ti / 60) : "");
-        bofView.slagCompositionGraph.original_data[0].push(slc[bofModel.getCompoundIndex("SiO2")] * 100);
-        bofView.slagCompositionGraph.original_data[1].push(slc[bofModel.getCompoundIndex("FeO")] * 100);
-        bofView.slagCompositionGraph.original_data[2].push(slc[bofModel.getCompoundIndex("MnO")] * 100);
-        bofView.slagCompositionGraph.original_data[3].push(slc[bofModel.getCompoundIndex("CaO")] * 100);
-        bofView.slagCompositionGraph.original_data[4].push(slc[bofModel.getCompoundIndex("MgO")] * 100);
-        RGraph.Clear(document.getElementById("slag_composition_graph_cnv"));
-        bofView.slagCompositionGraph.Draw();
+        bofView.slagCompositionGraph.get('SiO2').addPoint(slc[bofModel.getCompoundIndex("SiO2")] * 100);
+        bofView.slagCompositionGraph.get('FeO').addPoint(slc[bofModel.getCompoundIndex("FeO")] * 100);
+        bofView.slagCompositionGraph.get('MnO').addPoint(slc[bofModel.getCompoundIndex("MnO")] * 100);
+        bofView.slagCompositionGraph.get('CaO').addPoint(slc[bofModel.getCompoundIndex("CaO")] * 100);
+        bofView.slagCompositionGraph.get('MgO').addPoint(slc[bofModel.getCompoundIndex("MgO")] * 100);
 
         /*Melting Path Graph*/
-        bofView.meltingPathGraph.data[0].push([stc[bofModel.getElementIndex("C")] * 100, te]);
-        RGraph.Clear(document.getElementById("melting_path_cnv"));
-        RGraph.RedrawCanvas(document.getElementById("melting_path_cnv"));
+        bofView.meltingPathGraph.series[0].addPoint([stc[bofModel.getElementIndex("C")] * 100, te]);
     }
 }
