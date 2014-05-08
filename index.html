@@ -7,9 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Basic Oxygen Steelmaking Simulation</title>
-    <link rel="stylesheet" href="styles/main.min.a4992437.css"/>
+    <link rel="stylesheet" href="styles/main.min.8018915c.css"/>
     <script src="//use.edgefonts.net/play.js"></script>
-    <script src="scripts/vendor/init.min.c7e49a75.js"></script>
+    <script src="scripts/vendor/init.min.451822e5.js"></script>
     <script>
         var scorm = pipwerks.SCORM;
         //Specify SCORM 2004:
@@ -53,7 +53,7 @@
             <div class="color yellowbg"></div>
             <div class="color bluebg"></div>
             <div class="color redbg"></div>
-            <div class="gradient"><h5><script>pt('basic_oxygen_steelmaking')</script></h5></div>
+            <div class="gradient"><h2 class="title"><script>pt('basic_oxygen_steelmaking')</script></h2></div>
         </div>
     </header>
     <div id="sim_body">
@@ -494,14 +494,18 @@
             <div id="control-drawer" class="drawer drawer-right">
                 <a href="#" class="handle"><span class="fa fa-bars fa-lg"></span></a>
                 <div class="drawer-content">
-                    <div class="main-controls">
+                    <div class="controls panel-border">
+                        <ul class="control-labels small-block-grid-4 text-center">
+                            <li><h5><script>pt('simulation_rate');</script></h5></li>
+                            <li><h5><script>pt('lance_control');</script></h5></li>
+                            <li><h5><script>pt('oxygen_flow_rate');</script></h5></li>
+                            <li><h5><script>pt('stirring_flow_rate');</script></h5></li>
+                        </ul>
                         <ul class="small-block-grid-4 text-center">
                             <li>
-                                <h5>Simulation Rate</h5>
                                 <input id="simulation_rate_control" type="range" class="slider simulation-rate" min="1" max="32" value="1" data-sldr-vertical="">
                             </li>
                             <li id="lance_control">
-                                <h5>Lance Control</h5>
                                 <a href="#" class="lance-retract button round"><span class="fa fa-angle-double-up fa-3x fa-fw"></span></a>
                                 <a href="#" class="lance-up button round"><span class="fa fa-angle-up fa-3x fa-fw"></span></a>
                                 <a href="#" class="lance-down button round"><span class="fa fa-angle-down fa-3x fa-fw"></span></a>
@@ -513,11 +517,9 @@
                                 </div>
                             </li>
                             <li>
-                                <h5>Oxygen Flow Rate</h5>
                                 <input type="range" id="oxygen_flow_control" class="slider oxygen-rate" value="0" max="3" step="0.01" disabled="disabled" data-sldr-vertical="">
                             </li>
                             <li>
-                                <h5>Stirring Gas Rate</h5>
                                 <input id="stirring_gas_control" type="range" class="slider gas-rate" min="0" max="0.15" step="0.01" value="0" data-sldr-vertical="">
                             </li>
                         </ul>
@@ -549,7 +551,7 @@
 
 
             <div class="medium-6 large-6 columns">
-                <div class="sim-animation border">
+                <div class="animation-panel panel-border">
                     <ul class="small-block-grid-3">
                         <li>
                             <script>
@@ -580,12 +582,14 @@
                                 <canvas id="oxygen_stream_canvas" height="90" width="60"></canvas>
                             </div>
                         </div>
-                        <img id="sublance" src="images/sublance.557e397b.png" width="6" height="420">
+                        <img id="sublance" src="images/sublance.eee146d4.png" width="6" height="520">
                          <div id="furnace">
-                            <img id="furnace_shell" src="images/furnace.418d5958.png" width="260" height="280">
-                            <div id="hot_metal_stream_container">
-                                <img id="hot_metal_stream" src="images/hot_metal_stream.99e474b0.png">
-                                <img id="hot_metal" src="images/hot_metal.878c4d6e.png">
+                            <div id="furnace_shell">
+                                <img src="images/furnace.418d5958.png" width="260" height="280">
+                                <div id="hot_metal_stream_container">
+                                    <img id="hot_metal_stream" src="images/hot_metal_stream.99e474b0.png">
+                                    <img id="hot_metal" src="images/hot_metal.878c4d6e.png">
+                                </div>
                             </div>
 
                             <canvas id="slag"></canvas>
@@ -594,28 +598,30 @@
                             <canvas id="slag_bubbles"></canvas>
                             <img id="furnace_scrap" src="images/scrap.2e3308ad.png" width="180" height="200">
                         </div>
+                        <img id="ladle" src="images/ladle.101ae4f1.png" width="234" height="130">
                     </div>
+                    <a href="#" class="info info-bl" data-info=""></a>
                 </div>
             </div>
             <div class="medium-6 large-6 columns gauges">
                 <div class="graphs">
-                    <div class="graph-wrapper border">
+                    <div class="graph-wrapper panel-border">
                         <script>
-                            document.write('<div id="steel_composition_graph" class="graph tip-left" title="'+gt('steel_composition_graph_title')+'" data-tooltip></div>');
+                            document.write('<div id="steel_composition_graph" class="graph" title="'+gt('steel_composition_graph_title')+'" data-tooltip></div>');
                         </script>
                         <a href="#" class="info" data-info=""></a>
                     </div>
 
-                    <div class="graph-wrapper border">
+                    <div class="graph-wrapper panel-border">
                         <script>
-                            document.write('<div id="slag_composition_graph" title="'+gt('slag_composition_graph_title')+'" class="graph tip-left" data-tooltip></div>');
+                            document.write('<div id="slag_composition_graph" title="'+gt('slag_composition_graph_title')+'" class="graph" data-tooltip></div>');
                         </script>
                         <a href="#" class="info" data-info=""></a>
                     </div>
 
-                    <div class="graph-wrapper border">
+                    <div class="graph-wrapper panel-border">
                         <script>
-                            document.write('<div id="melting_path_graph" title="'+gt('melting_path_graph_title')+'" class="graph tip-left" data-tooltip></div>');
+                            document.write('<div id="melting_path_graph" title="'+gt('melting_path_graph_title')+'" class="graph" data-tooltip></div>');
                         </script>
                         <a href="#" class="info" data-info=""></a>
                     </div>
@@ -869,18 +875,26 @@
                     </div>
                 </dd>
                 <dd class="additional-info">
-                    <a href="#additional_info"><span class="bullet"></span> <strong><script>pt('additional_information')</script></strong></a>
+                    <a href="#additional_info" class="show-additional-info"><span class="bullet"></span> <strong><script>pt('additional_information')</script></strong></a>
                     <div id="additional_info" class="content">
-                        <dl>
-                            <dt><script>pt('view_analysis');</script>:</dt>
-                            <dd>
-                                <ul class="button-group even-2 radius">
-                                    <li><a href="#" id="final_results_button" class="button small" data-reveal-id="complete_analysis_results"><strong><script>pt('final_steel_composition');</script></strong></a></li>
-                                    <li><a href="#" id="final_results_button" class="button small" data-reveal-id="slag_composition"><strong><script>pt('final_slag_composition');</script></strong></a></li>
-                                </ul>
-                            </dd>
-                            <a href="#" class="button expand radius small" data-reveal-id="events_log"><script>pt('view_event_log');</script></a>
-                        </dl>
+                        <div class="row">
+                            <div class="columns steel-slag-results"></div>
+                        </div>
+                        <div class="row">
+                            <div class="melting-path-results medium-7 columns"></div>
+                            <div class="medium-5 columns">
+                                <dl>
+                                    <dt><script>pt('view_analysis');</script>:</dt>
+                                    <dd>
+                                        <ul class="button-group even-2 radius">
+                                            <li><a href="#" id="final_results_button" class="button small" data-reveal-id="complete_analysis_results"><script>pt('final_steel_composition');</script></a></li>
+                                            <li><a href="#" id="final_results_button" class="button small" data-reveal-id="slag_composition"><script>pt('final_slag_composition');</script></a></li>
+                                        </ul>
+                                    </dd>
+                                    <a href="#" class="button expand radius small" data-reveal-id="events_log"><script>pt('view_event_log');</script></a>
+                                </dl>
+                            </div>
+                        </div>
                     </div>
                 </dd>
             </dl>
@@ -1026,19 +1040,19 @@
 
 
     <script src="scripts/vendor/scripts.min.b6c5e540.js"></script>
-    <script src="scripts/pubsub.e44a5cfb.js"></script>
     <script src="scripts/drawers.7f89a17a.js"></script>
     <script src="scripts/spnr.de50b700.js"></script>
-    <script src="scripts/sldr.274bfb98.js"></script>
+    <script src="scripts/sldr.da85c598.js"></script>
+    <script src="scripts/pager.0422c18a.js"></script>
     <script src="scripts/utils.846cbfe5.js"></script>
     <script src="scripts/options.3e6fc514.js"></script>
-    <script src="scripts/models.a77e154b.js"></script>
-    <script src="scripts/inner-furnace.c8f64b28.js"></script>
+    <script src="scripts/models.f3796130.js"></script>
+    <script src="scripts/inner-furnace.2495d9b1.js"></script>
     <script src="scripts/stirring-gas.f7915d6b.js"></script>
-    <script src="scripts/view.241570b6.js"></script>
-    <script src="scripts/control.42c2cb72.js"></script>
+    <script src="scripts/view.82be99ac.js"></script>
+    <script src="scripts/control.f407c776.js"></script>
     <script src="scripts/log.5aaa287e.js"></script>
     <script src="scripts/additions.4c95bafd.js"></script>
-    <script src="scripts/main.1027ffe3.js"></script>
+    <script src="scripts/main.8de2d200.js"></script>
 </body>
 </html>

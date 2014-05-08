@@ -23,8 +23,8 @@ var enGB = {
     'total_oxygen_volume' : 'Total Oxygen Volume',
     'simulation_rate' : 'Simulation Rate',
     'lance_control' : 'Lance Control',
-    'oxygen_flow_rate' : 'Oxygen Flow Rate',
-    'stirring_flow_rate' : 'Stirring Gas Flow Rate',
+    'oxygen_flow_rate' : 'Oxygen Flow',
+    'stirring_flow_rate' : 'Stirring Gas Flow',
     'take_sample' : 'Take Sample',
     'make_additions' : 'Make Additions',
     'tap_steel' : 'Start Tapping',
@@ -152,7 +152,10 @@ var enGB = {
     'analysis_time' : 'Analysis time',
     'analysis_received' : 'Analysis received',
     'oxide' : 'Oxide',
-    'content' : 'Content'
+    'content' : 'Content',
+    // Final results
+    'settings_summary': 'Settings summary',
+    'additional_information': 'Additional information'
 }
 
 langs.push(enGB);

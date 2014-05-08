@@ -1,63 +1,10 @@
-(function($) {
-    'use strict';
-    var
-
-    ViewsFactory = function(current, next) {
-        return new Views(current, next);
-    },
-
-        Views = function(currentView, defaultView) {
-            if (!currentView) {
-                currentView = (defaultView) ? defaultView : 'intro';
-            }
-
-            this.currentView = currentView;
-
-            this._setupEvents();
-            this.gotoView(currentView);
-        };
-
-    Views.prototype = {
-        _setupEvents: function() {
-            var that = this;
-
-            $('[data-goto-id]').on('click', function(e) {
-                var next = $(this).data('gotoId');
-
-                that.gotoView(next);
-                e.preventDefault();
-            });
-        },
-        gotoView: function(next) {
-            this.trigger('goto.view', {
-                current: this.currentView,
-                next: next
-            });
-
-            document.getElementById(this.currentView).style.display = 'none';
-            document.getElementById(next).style.display = 'inherit';
-
-            this.currentView = next;
-
-            this.trigger('goneto.view', this.currentView);
-        }
-    };
-
-    $.extend(Views.prototype, pubsub);
-
-
-    window.Views = ViewsFactory;
-
-})(jQuery);
-
-
 (function($, document, window) {
     'use strict';
 
     var SCALE_FACTOR_PX_M = 24.5,
         STEEL_SCALE_FACTOR = 1.55,
 
-        furnaceShell = document.getElementById('furnaceShell'),
+        furnaceShell = document.getElementById('furnace_shell'),
         innerFurnaceImg = document.getElementById('inner_furnace'),
         slagCnv = document.getElementById('slag'),
         finalPosition = false,
@@ -154,7 +101,9 @@
                     }
                 },
                 yAxis: {
-                    gridLineDashStyle: 'Dash'
+                    gridLineDashStyle: 'Dash',
+                    minorTickInterval: 'auto',
+                    minorTickLength: 0
                 }
             });
 
@@ -204,14 +153,8 @@
                     title: {
                         text: 'Wt% Si Mn P'
                     },
-                    labels: {
-                        // style: {
-                        //     color: Highcharts.getOptions().colors[3]
-                        // }
-                    },
                     max: 1,
                     min: 0,
-                    minTickInterval: 0.01
                 },{
                     title: {
                         text: 'Wt%C'
@@ -223,7 +166,6 @@
                     },
                     max: 5,
                     min: 0,
-                    minTickInterval: 0.01
                 }]
             });
 
@@ -282,7 +224,6 @@
                     },
                     max: 100,
                     min: 0,
-                    minTickInterval: 0.01
                 }
             });
 
@@ -327,7 +268,8 @@
                     lineWidth: 1,
                     gridLineWidth: 0,
                     min: 1000,
-                    max: 1800
+                    max: 1800,
+                    minorTickInterval: null
                 },
                 series: [{
                     name: '%C / T',
@@ -399,64 +341,76 @@
             document.getElementById("final_results_total_cost").innerHTML = "$" + totalCost +
                 "<br>($" + costPerTonne + "/t)";
 
-            View.gotoView('final_results');
+            Page.gotoView('final_results');
 
         },
 
         startFurnaceRotation = function() {
-            // document.getElementById("control_and_info").className = "control_and_info_out";
-            // document.getElementById("bos_scrap").style.display = "none";
-            // document.getElementById("bos_furnace").className = "up";
-            // document.getElementById("ladle").className = "in";
-            // this.innerFurnace.style.left = '50px';
-            // this.innerFurnace.style.top = '45';
-            // this.innerFurnace.style.width = '225';
+            $('.drawer').addClass('closed');
 
-            // this.bosInner.steelLevelY -= 30;
-            // //bofModel.steelLevel +=30;
-            // this.bosInner.setBackground();
+            document.getElementById("furnace_scrap").style.display = "none";
+            $(document.getElementById("furnace")).css('overflow', 'visible');
+            document.getElementById("furnace_container").className = "lift";
+            document.getElementById("ladle").className = "slide-in";
 
-            // this.slagCnv.style.left = '50px';
-            // this.slagCnv.style.top = '45';
-            // this.slagCnv.style.width = '225';
-            // this.currentFoamHeight += 30;
+            $(innerFurnaceImg).css({
+                left: 50,
+                top: 45,
+                width: 225
+            });
+
+            bofView.bosInner.steelLevelY -= 30;
+            bofView.bosInner.setBackground();
+
+            $(slagCnv).css({
+                left: 50,
+                top: 45,
+                width: 225
+            });
+
+            // bofView.currentFoamHeight += 30;
         },
 
         rotateFurnace = function(deg) {
-            // if ((deg == 0) || (this.finalPosition)) {
-            //     return;
-            // }
-            // if (deg == 95) {
-            //     this.finalPosition = true;
-            // }
+            if ((deg == 0) || (finalPosition)) {
+                return;
+            }
+            if (deg == 95) {
+                finalPosition = true;
+            }
 
-            finalPosition = true;
+            $(furnaceShell).css({
+                webkitTransform: 'rotate(' + deg + 'deg)',
+                webkitTransformOrigin: '46.2% 53.5%',
+                transform: 'rotate(' + deg + 'deg)',
+                transformOrigin: '46.2% 53.5%'
+            });
+            // furnaceShell.style.msTransform = 'rotate(' + deg + 'deg)';
+            // furnaceShell.style.msTransformOrigin = '46.2% 53.5%';
 
-            // this.furnaceShell.style.webkitTransform = 'rotate(' + deg + 'deg)';
-            // this.furnaceShell.style.webkitTransformOrigin = '46.2% 53.5%';
+            //bofView.upperContent.currentFoamHeight = Math.max(0, bofView.upperContent.currentFoamHeight-bofView.upperContent.rateFoaming);
 
-            // this.furnaceShell.style.transform = 'rotate(' + deg + 'deg)';
-            // this.furnaceShell.style.transformOrigin = '46.2% 53.5%';
+            if (deg < 75) {
+                //innerFurnace.style.width = '230px';
+                $(innerFurnaceImg).css('left', parseInt(50 - deg / 5 + 3));
+                $(slagCnv).css({
+                    left: parseInt(30 - deg / 5),
+                    width: parseInt(230 + deg).toString()
+                });
+            } else if ((deg >= 75) && (deg < 85)) {
+                $(innerFurnaceImg).css({
+                    width: parseInt(230 + 20 * deg / 95),
+                    left: parseInt(50 - 20 * deg / 95)
+                });
 
-            // this.furnaceShell.style.msTransform = 'rotate(' + deg + 'deg)';
-            // this.furnaceShell.style.msTransformOrigin = '46.2% 53.5%';
-
-            // //bofView.upperContent.currentFoamHeight = Math.max(0, bofView.upperContent.currentFoamHeight-bofView.upperContent.rateFoaming);
-
-            // if (deg < 75) {
-            //     //this.innerFurnace.style.width = '230px';
-            //     this.innerFurnace.style.left = parseInt(50 - deg / 5 + 3).toString() + 'px';
-            //     this.slagCnv.style.left = parseInt(30 - deg / 5).toString() + 'px';
-            //     this.slagCnv.style.width = parseInt(230 + deg).toString() + 'px';
-            // } else if ((deg >= 75) && (deg < 85)) {
-            //     this.innerFurnace.style.width = parseInt(230 + 20 * deg / 95).toString() + 'px';
-            //     this.innerFurnace.style.left = parseInt(50 - 20 * deg / 95).toString() + 'px';
-            //     this.slagCnv.style.width = parseInt(230 + 20 * deg / 95).toString() + 'px';
-            //     this.slagCnv.style.left = parseInt(50 - 20 * deg / 95).toString() + 'px';
-            // } else {
-            //     this.innerFurnace.style.width = parseInt(230 + 50 * deg / 95).toString() + 'px';
-            //     document.getElementById("hot_metal_stream").style.top = (deg - 85) * 10 - 120;
-            // }
+                $(slagCnv).css({
+                    width: parseInt(230 + 20 * deg / 95),
+                    left: parseInt(50 - 20 * deg / 95)
+                });
+            } else {
+                $(innerFurnaceImg).css('width', parseInt(230 + 50 * deg / 95));
+                $(document.getElementById("hot_metal_stream")).css('top', (deg - 85) * 10 - 120);
+            }
         },
 
 

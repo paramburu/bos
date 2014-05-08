@@ -20,7 +20,10 @@
  *
  *
  * Events
+ *      sldrstart
+ *      sldrstop
  *      sldrchange
+ *      sldrslide
  *
  */
 (function($, window, document, undefined) {
@@ -29,15 +32,15 @@
     var modifier = function (fn) {
         return function() {
             var hash = {};
-            hash.previous = +this.element.val();
+            hash.previous = this.value();
 
             fn.apply(this, arguments);
-            hash.value = +this.element.val();
+            hash.value = this.value();
 
             if (hash.previous !== hash.value) {
                 this._updateHandle(this._toPercentage(hash.value));
                 this._updateLabel(hash.value);
-                this._trigger('change', null, hash);
+                this._trigger('slide', arguments[1], hash);
             }
         };
     };
@@ -230,8 +233,10 @@
         },
 
         _start: function(event) {
+            this._startValue = this.value();
             this.sliding = true;
             this._updateValue(event);
+            this._trigger('start', event, this._startValue);
         },
 
         _slide: function(event) {
@@ -240,9 +245,22 @@
             }
         },
 
-        _stop: function () {
-            if (this.sliding) {
-                this.sliding = false;
+        _stop: function (event) {
+            var hash = {
+                previous: this._startValue,
+                value: this.value()
+            };
+
+            if (!this.sliding) {
+                return false;
+            }
+
+            this.sliding = false;
+
+            this._trigger('stop', event, hash);
+
+            if (hash.value !== hash.previous) {
+                this._trigger('change', event, hash);
             }
         },
 

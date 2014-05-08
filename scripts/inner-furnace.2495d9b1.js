@@ -13,7 +13,7 @@ window.initFurnace = function () {
             },
 
             setBackground = function() {
-                // ctx.canvas.width = ctx.canvas.width;
+                ctx.canvas.width = ctx.canvas.width;
                 var grd = ctx.createRadialGradient(canvasWidth / 2, 0, 5,
                     canvasWidth / 2, canvasHeight / 3 * 2, 150);
                 grd.addColorStop(0, '#FFFFBF');
@@ -21,13 +21,13 @@ window.initFurnace = function () {
                 ctx.fillStyle = grd;
 
                 ctx.beginPath();
-                ctx.moveTo(0, steelLevelY);
-                ctx.lineTo(canvasWidth - 70, steelLevelY);
-                ctx.lineTo(canvasWidth - 70, steelLevelY + bofModel.steelLevel + 10);
-                ctx.lineTo((canvasWidth - 70) * 0.65, steelLevelY + bofModel.steelLevel + 40);
-                ctx.lineTo(0, steelLevelY + bofModel.steelLevel + bofModel.steelLevel);
-                ctx.lineTo(0, steelLevelY + bofModel.steelLevel);
-                ctx.lineTo(0, steelLevelY);
+                ctx.moveTo(0, innerFurnace.steelLevelY);
+                ctx.lineTo(ctx.canvas.width- 70, innerFurnace.steelLevelY);
+                ctx.lineTo(ctx.canvas.width - 70, innerFurnace.steelLevelY + bofModel.steelLevel + 10);
+                ctx.lineTo((ctx.canvas.width - 70) * 0.65, innerFurnace.steelLevelY + bofModel.steelLevel + 40);
+                ctx.lineTo(0, innerFurnace.steelLevelY + bofModel.steelLevel + bofModel.steelLevel);
+                ctx.lineTo(0, innerFurnace.steelLevelY + bofModel.steelLevel);
+                ctx.lineTo(0, innerFurnace.steelLevelY);
                 ctx.closePath();
 
                 ctx.fill();
@@ -37,14 +37,11 @@ window.initFurnace = function () {
                 ctx.clearRect(0, innerFurnace.steelLevelY - 30, ctx.canvas.width - 70, bofModel.steelLevel);
                 innerFurnace.steelLevelY += 0.2;
                 setBackground();
-                var hotMetal = document.getElementById("hot_metal");
-                var tempTop = (hotMetal.style.top === "") ? -15 : parseFloat(hotMetal.style.top.replace("px", ""));
-                hotMetal.style.top = (tempTop > -85) ? tempTop - 0.5 : -85;
+                var $hotMetal = $(document.getElementById("hot_metal"));
+                var tempTop = parseFloat($hotMetal.css('top'));
+                $hotMetal.css('top', ((tempTop > -85) ? tempTop - 0.5 : -85));
             };
 
-
-
-        setBackground();
 
         window.innerFurnace = {
             init: setBackground,
@@ -54,7 +51,6 @@ window.initFurnace = function () {
             setBackground: setBackground,
             lowerSteel: lowerSteel
         }
-
 
     })(document, window);
     (function(document, window) {

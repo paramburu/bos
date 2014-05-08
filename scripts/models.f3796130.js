@@ -2151,7 +2151,7 @@ function LanceModel(){
 
     this.sublanceMovingDown = function(){
         var sublance = document.getElementById('sublance');
-        if(sublance.offsetTop<-23){
+        if(sublance.offsetTop<-123){
             $(sublance).css('top', sublance.offsetTop + 5);
         }
         else{
@@ -2167,7 +2167,7 @@ function LanceModel(){
 
     this.sublanceMovingUp = function(){
         var sublance = document.getElementById('sublance')
-        if(sublance.offsetTop>-343){
+        if(sublance.offsetTop>-443){
             $(sublance).css('top', sublance.offsetTop - 5);
         }
         else{

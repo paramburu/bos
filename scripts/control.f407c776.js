@@ -85,8 +85,6 @@
                 $stirringGasControl.sldr('value', 0.05);
 
             bofView.argonFlowChange($stirringGasControl.sldr('value'));
-
-            bosLog.storeMsg(getTime(), gt('argon_flow_changed') + ": " + parseFloat($stirringGasControl.sldr('value')).toFixed(2) + " m<sup>3</sup>/min/t");
         },
 
         tapSteel = function() {
@@ -159,19 +157,20 @@
         };
 
 
-    $simulationRateControl.on('sldrchange', function(event, ui) {
+    $simulationRateControl.on('sldrslide', function(event, ui) {
         changeSimulationRate(ui.value);
     });
 
-    $('#oxygen_flow_control').on('sldrchange', function(event, ui) {
+    $('#oxygen_flow_control').on('sldrslide', function(event, ui) {
         bofView.lanceModel.oxygenFlowChange(ui.value);
-        // if((e.type==='slidechange')&&(parseFloat(ui.value)==parseFloat(document.getElementById('oxygen_flow_rate').innerHTML))){
-        //     bosLog.storeMsg(bofControl.getTime(), gt('oxygen_flow_changed') + ": " + parseFloat(ui.value).toFixed(2) + " Nm<sup>3</sup>/min/t");
-        // }
+    }).on('sldrchange', function(event, ui) {
+        bosLog.storeMsg(bofControl.getTime(), gt('oxygen_flow_changed') + ": " + parseFloat(ui.value).toFixed(2) + " Nm<sup>3</sup>/min/t");
     });
 
-    $stirringGasControl.on('sldrchange', function(event, ui) {
+    $stirringGasControl.on('sldrslide', function(event, ui) {
         argonFlowChange(ui.value);
+    }).on('sldrchange', function (event, ui) {
+        bosLog.storeMsg(getTime(), gt('argon_flow_changed') + ": " + parseFloat(ui.value).toFixed(2) + " m<sup>3</sup>/min/t");
     });
 
     $('#lance_control .lance-retract').on('click', function(event) {
